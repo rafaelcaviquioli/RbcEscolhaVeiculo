@@ -27,17 +27,14 @@ class EscolhaAutomovel {
     }
     
     public function procurar($estadoEntrada, $tipoEntrada, $motorEntrada){
-        //print_r($this->regras);
-        //print_r($this->valores);
-        //Busca o peso de cada valor entrado pelo usuário na busca.
+        $resultados = array();
+        
         $estadoPeso = $this->regras['estado']['peso'];
         $tipoPeso = $this->regras['tipo']['peso'];
         $motorPeso = $this->regras['motor']['peso'];
 
         $somaPesos = $estadoPeso + $tipoPeso + $motorPeso;
-        
-        echo "Entrada: $estadoEntrada, $tipoEntrada, $motorEntrada\n\n";
-        
+                
         //Itera sobre cada item da tabela de veículos do estoque.
         foreach ($this->valores as $tupla) {
             $sg = 0;
@@ -59,10 +56,16 @@ class EscolhaAutomovel {
 
             $sg += ($this->regras["motor"]['peso'] * $this->mod($pesoItemTupla - $pesoItemEntrada)) / $somaPesos;
             
-            echo "Tupla: $estadoValor $tipoValor $motorValor - Similaridade global: $sg\n";
+            $percentual = $this->mod((($sg -1) *100));
+            $resultados[] = array($estadoValor, $tipoValor, $motorValor, $percentual);
         }
+        
+        return $resultados;
     }
     public function mod($valor){
         return $valor < 0 ? $valor * -1 : $valor;
+    }
+    public function getValores(){
+        return $this->valores;
     }
 }
